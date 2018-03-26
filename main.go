@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+	swarmed "github.com/blaskovicz/go-swarmed"
 	"github.com/mreiferson/go-options"
 )
 
@@ -97,6 +98,9 @@ func main() {
 		if err != nil {
 			log.Fatalf("ERROR: failed to load config file %s - %s", *config, err)
 		}
+	}
+	if err := swarmed.LoadSecrets(); err != nil {
+		log.Printf("WARN: couldn't load swarm secrets - %s\n", err)
 	}
 	cfg.LoadEnvForStruct(opts)
 	options.Resolve(opts, flagSet, cfg)

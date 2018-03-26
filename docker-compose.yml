@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  web:
+    image: 127.0.0.1:5000/oauth2_proxy
+    build: .
+    ports:
+      - "4180:4180"
+    command: ["oauth2_proxy", "-http-address=http://:4180", "-redirect-url=https://www.carlyzach.com/oauth2/callback", "-email-domain=*", "-provider=github", "-cookie-secure=true", "-allow-token-request=true", "-skip-provider-button=true", "-scope=user:email gist", "-pass-access-token=true", "-cookie-refresh=1h"]
+    secrets: &web_secrets
+      - source: oauth2_proxy_cookie_secret_v1
+        target: oauth2_proxy_cookie_secret
+      - source: oauth2_proxy_client_id_v1
+        target: oauth2_proxy_client_id
+      - source: oauth2_proxy_client_secret_v1
+        target: oauth2_proxy_client_secret
+
+secrets:
+  oauth2_proxy_cookie_secret_v1:
+    external: true
+  oauth2_proxy_client_id_v1:
+    external: true
+  oauth2_proxy_client_secret_v1:
+    external: true
